@@ -1,0 +1,7 @@
+# This file is used internally by FFMPEG.
+file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/2724823860_2174947275_223132457.mp4'
+file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1164547788_1076466279_1025524797.mp4'
+file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1164547788_694412341_2903930553.mp4'
+file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1164547788_1076466279_2146283112.mp4'
+file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1164547788_2946957284_2592951424.mp4'
+file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1164547788_645682970_276268120.mp4'

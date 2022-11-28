@@ -36,15 +36,15 @@ class create_initial_circle(Scene):
         self.arccolor = YELLOW
 
 
-        self.r_text = MathTex("r", font_size = 80, color = RED)
+        self.r_text = MathTex("r", font_size = 80, color = ORANGE)
         self.big_c = Circle(
             radius= 3.5,
             color= WHITE
         )
         self.a = self.get_arc(0)
         self.radius_line = self.get_radius_line(0)
-        self.r_text.move_to(self.radius_line.get_center())
-        self.r_text.add_updater(lambda x: x.move_to(self.radius_line.get_center()))
+        self.r_text.next_to(self.radius_line, RIGHT, buff=1.3)
+        self.r_text.add_updater(lambda x: x.next_to(self.radius_line, LEFT, buff=1.3))
 
 
         group = VGroup(self.a, self.radius_line)
@@ -102,7 +102,8 @@ class create_initial_circle(Scene):
         self.play(
             Transform(semi_circumference, tau),
             FadeIn(self.big_c),
-            FadeOut(semi_circumference2)
+            FadeOut(semi_circumference2),
+            FadeOut(self.r_text)
         )
         
         self.wait(3)
@@ -130,23 +131,33 @@ class listing_scenes(Scene):
 
         self.add(tau, pi)
 
-        tau_pros = BulletedList(
-            "Unit circle",
-            "Sinusoids",
-            "Circumference",
-            "Arc length"
-        ).move_to([-5, -1, 0])
+        tau_pros = VGroup(
+            Text("Unit circle", font_size=30),
+            Text("Sinusoids", font_size=30),
+            Text("Circumference", font_size=30),
+            Text("Arc length", font_size=30)
+        ).move_to([-5, 1, 0])
 
 
-        pi_pros = BulletedList(
-            "Easier to measure diameter",
-            "We are already using it",
-            "aReA oF a cIrClE",
-        ).move_to([4, -1, 0])
+        pi_pros = VGroup(
+            Text("Easier to measure diameter", font_size=30),
+            Text("We are already using it", font_size=30),
+            Text("aReA oF a cIrClE", font_size=30, color = YELLOW),
+        ).move_to([4, 1, 0])
 
-        pi_pros.set_color_by_tex("aReA oF a cIrClE", YELLOW) 
-        self.play(Write(tau_pros), run_time = 4)
-        self.play(Write(pi_pros), run_time = 4)
+        tau_pros.arrange(DOWN, center=False, aligned_edge=LEFT)
+
+        pi_pros.arrange(DOWN, center=False, aligned_edge=LEFT)
+
+        
+        for index in range(len(tau_pros)):
+            self.play(Write(tau_pros[index]), run_time = .5)
+            self.wait(.5)
+
+        for index in range(len(pi_pros)):
+            self.play(Write(pi_pros[index]), run_time = .5)
+            self.wait(.5)
+
         self.wait(2)
 
 
