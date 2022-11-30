@@ -52,8 +52,6 @@ class create_initial_circle(Scene):
         def zero_to_pi(thegroup, alpha):
             a, r = group
             theta = interpolate(0, PI, alpha)
-            if alpha == .5:
-                a.set_color(RED)
             a.become(self.get_arc(theta))
             r.become(self.get_radius_line(theta))
         semi_circumference = MathTex("{\\pi}r", font_size = 100, color = YELLOW).shift(UP * 2)

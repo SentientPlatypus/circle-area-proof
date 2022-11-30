@@ -37,7 +37,20 @@ class a_of_circle(Scene):
         self.wait(3)
         
 
-class split(Scene):
+class split(ZoomedScene):
+    def __init__(self, **kwargs):
+        ZoomedScene.__init__(
+            self,
+            zoom_factor=0.3,
+            zoomed_display_height=8,
+            zoomed_display_width=1.5,
+            image_frame_stroke_width=20,
+            zoomed_camera_config={
+                "default_frame_stroke_width": 3,
+                },
+            **kwargs
+        )
+
     def construct(self):
         self.circle = Circle(
             radius=2,
@@ -48,7 +61,7 @@ class split(Scene):
 
         self.play(Create(self.circle))
         self.wait(1)
-        NUMBER_OF_LINES = 10
+        NUMBER_OF_LINES = 50
         lines = []
         for num in range(1, NUMBER_OF_LINES):
             start_angle = TAU/NUMBER_OF_LINES * num
@@ -57,22 +70,22 @@ class split(Scene):
             line = Line(
                 self.circle.point_at_angle(start_angle),
                 self.circle.point_at_angle(end),
-                stroke_width = .9
+                stroke_width = 2
             )
             lines.append(line)
 
         lines = VGroup(*lines)
-        self.play(lines.animate, run_time = .1)
+        self.play(FadeIn(lines), run_time = .1)
         
         self.wait(1)
-        for n in [20]:
+        for n in [NUMBER_OF_LINES]:
             sects=[AnnularSector(
                 inner_radius=0, 
                 outer_radius=2, 
                 angle=TAU/n, 
                 start_angle=TAU*i/n, 
                 fill_opacity=.5,
-                stroke_width=0, 
+                stroke_width= 2, 
                 color=BLUE) for i in range(n)]
 
             VGroup(*sects).set_stroke(WHITE, width=.9)
@@ -96,6 +109,7 @@ class split(Scene):
 
             self.remove(self.circle)
             self.remove(lines)
+            self.play(*anis)
             topsects=VGroup(*topp)
             topsects.arrange(RIGHT, buff=0)
             botsects=VGroup(*bot)
@@ -105,11 +119,62 @@ class split(Scene):
  
             self.play(ReplacementTransform(VGroup(*sects[:math.floor(n/2)]),topsects),ReplacementTransform(VGroup(*sects[math.floor(n/2):]),botsects), run_time=2)
             self.wait(.5)
-            # self.play(topsects.animate.shift(.5*math.cos(PI/n)*3*DOWN+.5*sects[0].get_width()*RIGHT), botsects.animate.shift(.5*math.cos(PI/n)*3*UP), run_time=2)
-            # self.wait(.5)
-            # self.play(topsects.animate.set_stroke(PURPLE, width=0).set_fill(PURPLE, opacity=1),botsects.animate.set_stroke(PURPLE, width=0))
-            # self.wait(3)
+            
+            all_sects = VGroup(*topsects, *botsects)
+            # all_sects.shift(UP * 1)
+            self.play(all_sects.animate.shift(UP * 2))
+            self.wait(2)
 
+            infty = MathTex("\\infty", font_size=70).move_to([
+                all_sects.get_right()[0],
+                all_sects.get_top()[1] + 1, 
+                0
+            ])
+            dots = MathTex("\\cdots", font_size = 70).move_to([
+                all_sects.get_top()[0],
+                all_sects.get_top()[1] + 1,
+                0
+            ])
+
+            one_two_three = MathTex(
+                "1, 2, 3",
+                font_size = 70
+            ).move_to([
+                all_sects.get_left()[0] + .7,
+                all_sects.get_top()[1] + 1,
+                0
+            ])
+
+            n = MathTex("n", font_size=70).move_to(infty.get_center())
+
+            textGroup = VGroup(one_two_three, dots, infty)
+
+            self.play(Write(textGroup)) 
+            self.wait(3)
+            self.play(Transform(textGroup[2], n), run_time = 1)
+            br = Brace(all_sects, sharpness=1)
+            tau_r = MathTex("\\tau r", font_size = 70, color = RED).move_to(br.get_center()).shift(DOWN * 1)
+ 
+            self.play(Create(br), run_time = 2)
+            self.wait(2)
+            self.play(Write(tau_r))
+
+            self.wait(2)
+
+
+            frame = self.zoomed_camera.frame
+            frame.move_to(all_sects[0][0].get_center())
+            self.play(
+                Create(frame),
+            )
+            self.activate_zooming(animate=False)
+
+            
+
+            self.play(self.get_zoomed_display_pop_out_animation())
+
+
+            self.wait(3)
     
         
 
