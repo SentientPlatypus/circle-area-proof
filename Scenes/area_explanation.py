@@ -37,19 +37,19 @@ class a_of_circle(Scene):
         self.wait(3)
         
 
-class split(ZoomedScene):
-    def __init__(self, **kwargs):
-        ZoomedScene.__init__(
-            self,
-            zoom_factor=0.3,
-            zoomed_display_height=8,
-            zoomed_display_width=1.5,
-            image_frame_stroke_width=20,
-            zoomed_camera_config={
-                "default_frame_stroke_width": 3,
-                },
-            **kwargs
-        )
+class split(MovingCameraScene):
+    # def __init__(self, **kwargs):
+    #     ZoomedScene.__init__(
+    #         self,
+    #         zoom_factor=0.3,
+    #         zoomed_display_height=8,
+    #         zoomed_display_width=1.5,
+    #         image_frame_stroke_width=20,
+    #         zoomed_camera_config={
+    #             "default_frame_stroke_width": 3,
+    #             },
+    #         **kwargs
+    #     )
 
     def construct(self):
         self.circle = Circle(
@@ -160,19 +160,30 @@ class split(ZoomedScene):
             self.play(Write(tau_r))
 
             self.wait(2)
+            to_focus = all_sects[NUMBER_OF_LINES - 1]
+            diagram = VGroup(*all_sects, br, tau_r, *textGroup)
 
+            # frame = self.zoomed_camera.frame
+            # frame.move_to(to_focus)
+            # self.play(
+            #     Create(frame),
+            # )
+            # self.activate_zooming(animate=False)
+            # self.play(self.get_zoomed_display_pop_out_animation())
+            # set(height = to_focus.height * 7, width = to_focus.width * 3)
 
-            frame = self.zoomed_camera.frame
-            frame.move_to(all_sects[0][0].get_center())
+            self.camera:MovingCamera
+
+            self.camera.frame.save_state()
+            self.play( self.camera.frame.animate.set(height = to_focus.height))
             self.play(
-                Create(frame),
+                self.camera.frame.animate
+                .next_to([to_focus.get_left()[0] - self.camera.frame.width + to_focus.width, to_focus.get_left()[1], to_focus.get_left()[2]], buff= 0),
+
             )
-            self.activate_zooming(animate=False)
 
-            
-
-            self.play(self.get_zoomed_display_pop_out_animation())
-
+            self.wait(2)
+ 
 
             self.wait(3)
     
