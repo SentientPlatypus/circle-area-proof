@@ -52,8 +52,10 @@ class split(MovingCameraScene):
     #     )
 
     def construct(self):
+        RADIUS = 2
+        MINI_TRIANGLE_FONT = 12
         self.circle = Circle(
-            radius=2,
+            radius= RADIUS    ,
             color=BLUE,
             fill_opacity = .5
         )
@@ -62,53 +64,39 @@ class split(MovingCameraScene):
         self.play(Create(self.circle))
         self.wait(1)
         NUMBER_OF_LINES = 50
-        lines = []
-        for num in range(1, NUMBER_OF_LINES):
-            start_angle = TAU/NUMBER_OF_LINES * num
-            end = TAU/NUMBER_OF_LINES * num + TAU/2
-
-            line = Line(
-                self.circle.point_at_angle(start_angle),
-                self.circle.point_at_angle(end),
-                stroke_width = 2
-            )
-            lines.append(line)
-
-        lines = VGroup(*lines)
-        self.play(FadeIn(lines), run_time = .1)
-        
         self.wait(1)
         for n in [NUMBER_OF_LINES]:
-            sects=[AnnularSector(
-                inner_radius=0, 
-                outer_radius=2, 
-                angle=TAU/n, 
-                start_angle=TAU*i/n, 
-                fill_opacity=.5,
-                stroke_width= 2, 
-                color=BLUE) for i in range(n)]
+            sects = VGroup()
 
-            VGroup(*sects).set_stroke(WHITE, width=.9)
-
+            for i in range(n):
+                sect = AnnularSector(
+                    inner_radius=0, 
+                    outer_radius=RADIUS, 
+                    angle=TAU/n, 
+                    start_angle=TAU*i/n, 
+                    fill_opacity=1,
+                    stroke_width= 2, 
+                    color=BLUE
+                ).set_stroke(WHITE, width=.9)
+                sects.add(sect)
+                
+            self.play(FadeIn(sects), run_time = 1.5)
 
             topp=[]
             bot=[]
             anis=[]
             for i in range(n):
                 temp=sects[i].copy()
+                temp.rotate(-2*PI*i/n, about_point=[0,0,0])
+                temp.rotate(3 * PI/2-PI/n, about_point=[0,0,0])
                 if i<math.floor(n/2):
-                    temp.rotate(-2*PI*i/n, about_point=[0,0,0])
-                    temp.rotate(3 * PI/2-PI/n, about_point=[0,0,0])
                     topp.append(temp)
                     anis.append(sects[i].animate.set_fill(BLUE_D, opacity=1))
                 else:
-                    temp.rotate(-2 * PI * i / n, about_point=[0, 0, 0])
-                    temp.rotate(3*PI / 2 - PI / n, about_point=[0, 0, 0])
                     bot.append(temp)
                     anis.append(sects[i].animate.set_fill(BLUE_D, opacity=1))
 
             self.remove(self.circle)
-            self.remove(lines)
             self.play(*anis)
             topsects=VGroup(*topp)
             topsects.arrange(RIGHT, buff=0)
@@ -121,7 +109,7 @@ class split(MovingCameraScene):
             self.wait(.5)
             
             all_sects = VGroup(*topsects, *botsects)
-            # all_sects.shift(UP * 1)
+            all_sects.shift(UP * 1)
             self.play(all_sects.animate.shift(UP * 2))
             self.wait(2)
 
@@ -163,33 +151,167 @@ class split(MovingCameraScene):
             to_focus = all_sects[NUMBER_OF_LINES - 1]
             diagram = VGroup(*all_sects, br, tau_r, *textGroup)
 
-            # frame = self.zoomed_camera.frame
-            # frame.move_to(to_focus)
-            # self.play(
-            #     Create(frame),
-            # )
-            # self.activate_zooming(animate=False)
-            # self.play(self.get_zoomed_display_pop_out_animation())
-            # set(height = to_focus.height * 7, width = to_focus.width * 3)
-
             self.camera:MovingCamera
 
             self.camera.frame.save_state()
-            self.play( self.camera.frame.animate.set(height = to_focus.height))
+            self.play( self.camera.frame.animate.set(height = to_focus.height * 1.25))
+            self.play(self.camera.frame.animate.shift(DOWN * .1))
             self.play(
                 self.camera.frame.animate
-                .next_to([to_focus.get_left()[0] - self.camera.frame.width + to_focus.width, to_focus.get_left()[1], to_focus.get_left()[2]], buff= 0),
-
+                .next_to([to_focus.get_left()[0] - self.camera.frame.width + to_focus.width * 1.5, to_focus.get_left()[1], to_focus.get_left()[2]], buff= 0),
             )
 
             self.wait(2)
- 
 
-            self.wait(3)
+            r = MathTex("r", font_size = MINI_TRIANGLE_FONT).move_to(to_focus.get_left())
+            r2 = r.copy().move_to(to_focus.get_right())
+            theta = MathTex("\\theta", font_size = MINI_TRIANGLE_FONT).move_to(to_focus.get_top() - [0, .7, 0])
+            tau_r_n = MathTex("\\frac {\\tau r} {n}", font_size = MINI_TRIANGLE_FONT - 2, color = RED).move_to(to_focus.get_bottom() + [0, -.16, 0])
+
+            self.play(
+                FadeIn(r),
+                FadeIn(r2),
+                FadeIn(theta),
+                FadeIn(tau_r_n)
+            )
+
+            theta_equals = MathTex("\\theta = \\frac {\\tau} {n}", font_size = 15).move_to(self.camera.frame.get_edge_center(UL) + [.5, -.5, 0])
+
+            area_of_triangle = MathTex("A = \\frac {1} {2} \\sin", "\\left(","\\theta", "\\right)", "ab", font_size = 15).move_to(theta_equals.get_bottom() + [0, -.3, 0])
+
+
+            self.play(Write(theta_equals))
+            self.play(Write(area_of_triangle))
+
+            self.play(area_of_triangle.animate.shift(RIGHT * 1.5))
+
+            a_but_with_n_param = MathTex("A(n) = \\frac {1} {2} \\sin", "\\left(","\\theta", "\\right)", "ab" font_size = 15).move_to(area_of_triangle[0])
+            self.play(ReplacementTransform(area_of_triangle, a_but_with_n_param))
+            t_n = MathTex("\\frac {\\tau} {n}", font_size = 15, color = RED).move_to(area_of_triangle[2].get_center())
+            r_sq = MathTex("r^2", font_size = 15).move_to(area_of_triangle[4])
+            self.play(
+                Transform(theta_equals, t_n),
+                Transform(area_of_triangle[2], t_n),
+            )
+
+            self.wait(2)
+            self.play(Transform(area_of_triangle[4], r_sq))
+            self.play(Restore(self.camera.frame))
+            self.wait(1)
+
+            total_area = Text("Total area:", font_size = 15).move_to(tau_r.get_bottom()).shift(DOWN * 1.2)
+            equation_for_total_area = MathTex("nA(n)")
+
+            self.play(Write(total_area), Write(equation_for_total_area))
+
+            self.play( self.camera.frame.animate.set(height = to_focus.height * 1.25))
+            self.camera.frame.animate.shift(DOWN * .1)
+            self.play(
+                self.camera.frame.animate
+                .next_to([to_focus.get_left()[0] - self.camera.frame.width + to_focus.width * 1.5, to_focus.get_left()[1], to_focus.get_left()[2]], buff= 0),
+            )
+
+
+            
+
+
     
         
 
 
+class no_split(MovingCameraScene):
+    # def __init__(self, **kwargs):
+    #     ZoomedScene.__init__(
+    #         self,
+    #         zoom_factor=0.3,
+    #         zoomed_display_height=8,
+    #         zoomed_display_width=1.5,
+    #         image_frame_stroke_width=20,
+    #         zoomed_camera_config={
+    #             "default_frame_stroke_width": 3,
+    #             },
+    #         **kwargs
+    #     )
+
+    def construct(self):
+        RADIUS = 3
+        self.circle = Circle(
+            radius=RADIUS,
+            color=BLUE,
+            fill_opacity = .5
+        )
+
+
+        self.play(Create(self.circle))
+        self.wait(1)
+        NUMBER_OF_LINES = 75
+        self.camera:MovingCamera
+        self.camera.frame.save_state()
+        for n in [NUMBER_OF_LINES]:
+            sects= VGroup()
+
+            for i in range(n):
+                sect = AnnularSector(
+                    inner_radius=0, 
+                    outer_radius=RADIUS, 
+                    angle=TAU/n, 
+                    start_angle=TAU*i/n, 
+                    fill_opacity=1,
+                    stroke_width= 2, 
+                    color=BLUE
+                ).set_stroke(WHITE, width=.9)
+                sects.add(sect)
+                
+            self.play(Create(sects), run_time = 1.5)
+
+            all_sects = VGroup(*sects)
+
+            self.remove(self.circle)
+
+
+            self.wait(2)
+            to_focus: AnnularSector = all_sects[NUMBER_OF_LINES - 1]
+
+
+
+
+            self.play(self.camera.frame.animate.set(height = to_focus.height - 2, width = to_focus.width * 1.1),
+                all_sects.animate.set(stroke_width = 0))
+            self.play(
+                self.camera.frame.animate.move_to([to_focus.get_left()[0] + self.camera.frame.width / 2, to_focus.get_left()[1], to_focus.get_left()[2]]),
+                to_focus.animate.set(color = YELLOW)
+            )
+
+            theta = MathTex("\\theta", font_size = 15)
+            angle = MathTex("\\frac {\\tau} {n}", font_size = 15).next_to(to_focus.get_left())
+            radius = MathTex("r", font_size = 15, color = BLACK ).move_to([
+                to_focus.get_top()[0],
+                to_focus.get_top()[1],
+                to_focus.get_top()[2],
+                ])
+            radius2 = radius.copy().move_to([
+                to_focus.get_bottom()[0],
+                to_focus.get_bottom()[1] + to_focus.width / 2,
+                to_focus.get_bottom()[2],
+                ])
+
+            sector_formula = MathTex("\\theta r", font_size = 15).next_to(to_focus.get_right())
+            sector_length = MathTex("\\frac {\\tau r} {n}", font_size = 15).next_to(to_focus.get_right())
+
+            
+            
+            self.play(
+                FadeIn(radius),
+                FadeIn(radius2)
+            )
+            self.play(
+                FadeIn(angle)
+            )
+
+
+ 
+
+            self.wait(3)
 
 
 
