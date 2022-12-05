@@ -232,17 +232,22 @@ class split(MovingCameraScene):
 
             a_but_with_n_param = MathTex("A(n) = \\frac {1} {2} \\sin", "\\left(","\\theta", "\\right)", "ab", font_size = 15).move_to(area_of_triangle[0])
             self.play(ReplacementTransform(area_of_triangle, a_but_with_n_param))
+
             t_n = MathTex("\\frac {\\tau} {n}", font_size = 15, color = RED).move_to(area_of_triangle[2].get_center())
             r_sq = MathTex("r^2", font_size = 15).move_to(area_of_triangle[4])
             self.play(
                 Transform(theta_equals, t_n),
-                Transform(a_but_with_n_param[2], t_n),
+                ReplacementTransform(a_but_with_n_param[2], t_n),
             )
+
 
             self.wait(2)
             self.play(Transform(a_but_with_n_param[4], r_sq))
             self.play(Restore(self.camera.frame))
             self.wait(1)
+            self.remove(theta_equals)
+            self.remove(t_n)
+
 
             total_area = Text("Total area:", font_size= 50).move_to(tau_r.get_bottom()).shift(DOWN * 1.2)
             equation_for_total_area = MathTex("nA(n)", font_size= 50).next_to(total_area, RIGHT, buff = .5)
@@ -274,12 +279,12 @@ class split(MovingCameraScene):
                 self.to_focus = all_sects[new_n - 1].set_color(YELLOW)
 
             self.play(
-                UpdateFromAlphaFunc(
-                    all_sects,
-                    make_infinite_sectors,
-                    run_time = 2.5,
-                    rate_func = rate_functions.ease_in_expo
-                ),
+                # UpdateFromAlphaFunc(
+                #     all_sects,
+                #     make_infinite_sectors,
+                #     run_time = 2.5,
+                #     rate_func = rate_functions.ease_in_expo
+                # ),
                 Transform(textGroup[2], infty),
                 ShowCreationThenFadeOut(SurroundingRectangle(textGroup[2], color = YELLOW, buff=.25))
             )
@@ -299,45 +304,87 @@ class split(MovingCameraScene):
             )
 
             equation_for_total_area_inf = MathTex(
-                "\\lim_{n \\to \\infty} n A (n)", 
-                font_size = 15).move_to(a_but_with_n_param.get_top() + [0, .5, 0])
+                "\\lim_{n \\to \\infty} n A (n)",
+                r"= \lim_{n \to \infty}", "n", r"\left(\sin \left(", r"\frac {\tau} {n}", r"\right) \frac {1} {2} r^2 \right)", 
+                font_size = 15).move_to(a_but_with_n_param.get_top())
+            equation_for_total_area_inf[4].set_color(RED)
+
+            self.play(FadeOut(a_but_with_n_param), run_time = .01)
 
             self.play(Write(equation_for_total_area_inf))
 
             copy_of_to_focus = self.to_focus.copy()
             self.n_of_sects = 150
 
-            # def squeeze_theta(sector:AnnularSector, alpha):
-            #     if alpha < .5:
-            #         new_theta = interpolate(1, .1, alpha * 2)
-            #     else:
-            #         new_theta = interpolate(1, 10, alpha)
-            #     sector.become(
-            #         AnnularSector(
-            #             inner_radius=0, 
-            #             outer_radius=RADIUS, 
-            #             angle=sector.angle * new_theta, 
-            #             start_angle=sector.start_angle, 
-            #             fill_opacity=1,
-            #             stroke_width= 2, 
-            #             color=BLUE
-            #         ).set_stroke(WHITE, width=.9)
-            #         .rotate(-2*PI*(NUMBER_OF_LINES - 1)/NUMBER_OF_LINES, about_point=[0,0,0])
-            #         .rotate(3 * PI/2-PI/NUMBER_OF_LINES, about_point=[0,0,0])
-            #         .move_arc_center_to(sector.get_arc_center())
-            #     )
+            self.play(
+                ShowCreationThenFadeOut(SurroundingRectangle(equation_for_total_area_inf[3:], color = YELLOW, buff=.05)),
 
-
+                # UpdateFromAlphaFunc(
+                #     all_sects,
+                #     make_infinite_sectors,
+                #     run_time = 9,
+                #     rate_func = rate_functions.ease_in_expo
+                # )
+                run_time = 2
+            )
 
             self.play(
-                UpdateFromAlphaFunc(
-                    all_sects,
-                    make_infinite_sectors,
-                    run_time = 9,
-                    rate_func = rate_functions.ease_in_expo
-                )
+                ShowCreationThenFadeOut(SurroundingRectangle(equation_for_total_area_inf[2], color = YELLOW, buff = .05)),
+                run_time = 1
             )
+
+            u_of_n = MathTex(
+                "{{u(n)}} = { {{\\tau}} \\over {{n}} } ",
+                font_size = 15
+            ).move_to(self.camera.frame.get_corner(DL) + [.5, .7, 0])
+            u_of_n[2:].set_color(RED)
+
+
+
+            n_ito_u = u_of_n.copy().next_to(u_of_n, RIGHT, buff = 1.5)
+
+
+
+            self.play(Write(u_of_n))
+            self.wait(1)
+            self.play(Write(n_ito_u))
+            self.play(
+                Swap(n_ito_u[4], n_ito_u[0])
+            )
+            self.wait(1)
+
+            lim_of_u = MathTex(
+                "\\lim_{n \\to \\infty}{{u(n)}} = 0 ",
+                font_size = 15
+            ).move_to(u_of_n.get_bottom() + [0, -.2, 0])
             
+            self.play(
+                Write(lim_of_u)
+            )
+
+            self.wait(1)
+
+            new_limits_ITO_u = MathTex(
+                r"= \lim_{u(n) \to 0} \frac {\tau} {u(n)}", r"\sin \left(",r"\frac {\tau} {n}", r"\right) \frac {1} {2} r^2",
+                font_size = 15
+            ).move_to(equation_for_total_area_inf[1:])
+            new_limits_ITO_u[2].set_color(RED)
+
+            self.play(
+                ReplacementTransform(equation_for_total_area_inf[1:], new_limits_ITO_u)
+            )
+
+            self.wait()
+
+
+    
+
+
+
+class substitution(Scene):
+    def construct(self):
+        print("hi")
+
             
 
 
