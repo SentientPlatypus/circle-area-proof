@@ -133,7 +133,6 @@ class listing_scenes(Scene):
             Text("Unit circle", font_size=30),
             Text("Sinusoids", font_size=30),
             Text("Circumference", font_size=30),
-            Text("Arc length", font_size=30)
         ).move_to([-5, 1, 0])
 
 

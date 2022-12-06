@@ -238,6 +238,7 @@ class split(MovingCameraScene):
             self.play(
                 Transform(theta_equals, t_n),
                 ReplacementTransform(a_but_with_n_param[2], t_n),
+                ReplacementTransform(theta, MathTex("\\frac {\\tau} {n}", font_size = MINI_TRIANGLE_FONT - 2, color = RED).move_to(theta))
             )
 
 
@@ -365,16 +366,42 @@ class split(MovingCameraScene):
             self.wait(1)
 
             new_limits_ITO_u = MathTex(
-                r"= \lim_{u(n) \to 0} \frac {\tau} {u(n)}", r"\sin \left(",r"\frac {\tau} {n}", r"\right) \frac {1} {2} r^2",
+                r"= \lim_{u(n) \to 0} \frac {\tau} {u(n)}", r"\sin \left(",r"u(n)", r"\right) \frac {1} {2} r^2",
                 font_size = 15
-            ).move_to(equation_for_total_area_inf[1:])
+            ).move_to(equation_for_total_area_inf[1:]).shift(RIGHT * .2)
             new_limits_ITO_u[2].set_color(RED)
 
             self.play(
-                ReplacementTransform(equation_for_total_area_inf[1:], new_limits_ITO_u)
+                Transform(equation_for_total_area_inf[1:], new_limits_ITO_u)
+            )
+            self.play(
+                ShowCreationThenFadeOut(SurroundingRectangle(equation_for_total_area_inf[1], color = YELLOW, buff = .05))
+            )
+            self.wait(1.5)
+            self.play(
+                Transform(
+                    equation_for_total_area_inf[1:],
+                    MathTex(
+                        r"= \lim_{u(n) \to 0}", r"\frac {\sin \left(u(n)\right)} {\frac {u(n)}{\tau} }", r"\frac {1} {2} r^2",
+                        font_size = 15
+                    ).move_to(new_limits_ITO_u).set_color(WHITE)
+                ),
             )
 
+            self.play(
+                Transform(
+                    equation_for_total_area_inf[1:],
+                    MathTex(
+                        r"= \lim_{u(n) \to 0}", r"\frac {\sin \left(u(n)\right)} {u(n)}", r"\frac {\tau} {2} r^2",
+                        font_size = 15
+                    ).move_to(new_limits_ITO_u).set_color(WHITE)
+                ),
+            )
+
+            self.play(equation_for_total_area_inf[2].animate.set_color(YELLOW))
+
             self.wait()
+
 
 
     
