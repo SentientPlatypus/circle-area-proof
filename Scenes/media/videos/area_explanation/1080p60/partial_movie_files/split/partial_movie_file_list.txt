@@ -53,5 +53,5 @@ file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explana
 file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1639439488_791967190_1290178603.mp4'
 file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1639439488_1269789621_2709436054.mp4'
 file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1639439488_3028748327_2709436054.mp4'
-file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1639439488_3185304544_1740304792.mp4'
-file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1639439488_329969645_140079817.mp4'
+file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1639439488_2996511771_2737583284.mp4'
+file 'file:W:/Code/Animations/circle-area-proof/Scenes/media/videos/area_explanation/1080p60/partial_movie_files/split/1639439488_329969645_3370931750.mp4'

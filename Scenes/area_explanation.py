@@ -398,8 +398,12 @@ class split(MovingCameraScene):
                 ),
             )
 
-            self.play(equation_for_total_area_inf[2].animate.set_color(YELLOW))
-
+            equation_for_total_area_inf[2].set_color(YELLOW)
+            special_lim = Text("! ! ! Special limit alert ! ! !", color = RED, font_size=17).move_to(self.camera.frame_center)
+            self.play(
+                ShowCreationThenFadeOut(SurroundingRectangle(equation_for_total_area_inf[2:4], color = YELLOW, buff = .05)),
+                ShowCreationThenFadeOut(special_lim)
+            )
             self.wait()
 
 
