@@ -305,8 +305,8 @@ class split(MovingCameraScene):
             )
 
             equation_for_total_area_inf = MathTex(
-                "\\lim_{n \\to \\infty} n A (n)",
-                r"= \lim_{n \to \infty}", "n", r"\left(\sin \left(", r"\frac {\tau} {n}", r"\right) \frac {1} {2} r^2 \right)", 
+                "\\lim_{n \\to \\infty} n A (n) =",
+                r"\lim_{n \to \infty}", "n", r"\left(\sin \left(", r"\frac {\tau} {n}", r"\right) \frac {1} {2} r^2 \right)", 
                 font_size = 15).move_to(a_but_with_n_param.get_top())
             equation_for_total_area_inf[4].set_color(RED)
 
@@ -366,7 +366,7 @@ class split(MovingCameraScene):
             self.wait(1)
 
             new_limits_ITO_u = MathTex(
-                r"= \lim_{u(n) \to 0} \frac {\tau} {u(n)}", r"\sin \left(",r"u(n)", r"\right) \frac {1} {2} r^2",
+                r"\lim_{u(n) \to 0} \frac {\tau} {u(n)}", r"\sin \left(",r"u(n)", r"\right) \frac {1} {2} r^2",
                 font_size = 15
             ).move_to(equation_for_total_area_inf[1:]).shift(RIGHT * .2)
             new_limits_ITO_u[2].set_color(RED)
@@ -382,7 +382,7 @@ class split(MovingCameraScene):
                 Transform(
                     equation_for_total_area_inf[1:],
                     MathTex(
-                        r"= \lim_{u(n) \to 0}", r"\frac {\sin \left(u(n)\right)} {\frac {u(n)}{\tau} }", r"\frac {1} {2} r^2",
+                        r"\lim_{u(n) \to 0}", r"\frac {\sin \left(u(n)\right)} {\frac {u(n)}{\tau} }", r"\frac {1} {2} r^2",
                         font_size = 15
                     ).move_to(new_limits_ITO_u).set_color(WHITE)
                 ),
@@ -392,7 +392,7 @@ class split(MovingCameraScene):
                 Transform(
                     equation_for_total_area_inf[1:],
                     MathTex(
-                        r"= \lim_{u(n) \to 0}", r"\frac {\sin \left(u(n)\right)} {u(n)}", r"\frac {\tau} {2} r^2",
+                        r"\lim_{u(n) \to 0}", r"\frac {\sin \left(u(n)\right)} {u(n)}", r"\frac {\tau} {2} r^2",
                         font_size = 15
                     ).move_to(new_limits_ITO_u).set_color(WHITE)
                 ),
@@ -404,6 +404,26 @@ class split(MovingCameraScene):
                 ShowCreationThenFadeOut(SurroundingRectangle(equation_for_total_area_inf[2:4], color = YELLOW, buff = .05)),
                 ShowCreationThenFadeOut(special_lim)
             )
+
+            self.play(
+                ShowCreationThenFadeOut(Line(
+                    equation_for_total_area_inf[2:4].get_edge_center(UR),
+                    equation_for_total_area_inf[2:4].get_edge_center(DL)
+                    )),
+                Transform(
+                    equation_for_total_area_inf[1:4],
+                    MathTex("= 1", font_size = 15).move_to(equation_for_total_area_inf[2:4])
+                )
+            )
+            self.play(
+                Transform(equation_for_total_area_inf[4:], MathTex(r"\frac {\tau} {2} r^2")),
+                equation_for_total_area_inf[4:].animate.move_to(equation_for_total_area_inf[1:4]),
+                FadeOut(equation_for_total_area_inf[1:4]),
+                Create(SurroundingRectangle(equation_for_total_area_inf[4:], YELLOW))
+            )
+
+
+
             self.wait()
 
 
@@ -412,9 +432,84 @@ class split(MovingCameraScene):
 
 
 
-class substitution(Scene):
+class understandingthelimit(Scene):
     def construct(self):
-        print("hi")
+        plane = NumberPlane(
+            x_range=[-3, 10],
+        )
+
+        self.play(
+            DrawBorderThenFill(plane),
+            plane.animate.add_coordinates()
+        )
+        self.wait(.5)
+        sinx = plane.plot(lambda x: np.sin(x) / x).set_color(RED)
+        line_at_zero = Line(
+            plane.c2p(*[0, -3, 0]),
+            plane.c2p(*[0, 4, 0])
+        ).set_color(YELLOW)
+        line_at_zero_label = MathTex(
+            r"\lim_{x \ \to 0} \frac {\sin x} {x} = 1", 
+            color = YELLOW
+        ).move_to(line_at_zero.get_bottom() + [0, -.3, 0])
+
+
+        self.play(
+            Create(sinx)
+        )
+
+
+
+        sinx_label = plane.get_graph_label(
+            sinx,
+            label = MathTex(r"\frac {\sin x} {x}", color = RED),
+            direction=UR,
+            x_val=2
+        )
+        self.play(Write(sinx_label))
+        self.play(Create(line_at_zero))
+        self.wait(1)
+
+        dot_sin = Dot().set_color(BLUE_A)
+        # dot_sin_label = MathTex(f"{dot_sin.get_x()}")
+        # dot_sin_label.add_updater(lambda x : x.move_to(dot_sin))
+        def dont_pass_zero(x:Dot):
+            if x.get_x() < plane.get_origin()[0]:
+                x.move_to(plane.c2p(*[0, 1, 0]))
+
+
+        dot_sin.add_updater(lambda x: dont_pass_zero(x))
+        # self.add(dot_sin_label)
+        sinx.reverse_points()
+        self.play(
+            MoveAlongPath(dot_sin, sinx), 
+            rate_func = rate_functions.rush_into,
+            run_time = 2
+        )
+        dot_sin.move_to(plane.c2p(*[0, 1, 0]))
+        self.play(Write(line_at_zero_label))
+        
+        self.wait(1)
+        self.play(FadeOut(sinx_label, line_at_zero_label))
+
+        def generate_points_un(x):
+            return TAU / x
+        u_n:ParametricFunction = plane.plot(lambda x: generate_points_un(x), use_smoothing = False).set_color(BLUE)
+
+        
+        un_label = plane.get_graph_label(
+            u_n,
+            label = MathTex(r"\frac {\tau} {x}"),
+            direction=UR,
+            x_val= 5
+        )
+
+        self.play(Create(u_n))
+        self.play(Write(un_label))
+
+        sin_un = plane.plot(lambda x: np.sin(TAU / x) / x).set_color(GREEN)
+
+        self.wait(2)
 
             
 
