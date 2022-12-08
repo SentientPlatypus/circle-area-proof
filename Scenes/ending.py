@@ -26,11 +26,14 @@ class credits(Scene):
 
         bullets = [
             ["Ms Blake not caring during CIM", "Peer tutoring club for chips", "Alex DC for constant input"],
-            ["Bel for grapes", "David Riccio for lemon squares", "3b1b"]
+            ["Bel for grapes", "Project extensions", "Test extension"],
+            ["David Riccio for lemon squares", "Lyndon Hess for wearing shoes", "Kieran Shulman for cheese-its"],
+            ["Chargers in the library", "Lucine", "Fitness subteam"]
         ]
 
 
         self.play(Write(list))
+        self.wait(3)
         for bullet in bullets:
             new_list = BulletedList(
                 bullet[0],
@@ -47,5 +50,6 @@ class credits(Scene):
                         list[i],
                         new_list[i]
                     ),
-                    run_time = 2
+                    run_time = 1
                 )
+                self.wait(2)

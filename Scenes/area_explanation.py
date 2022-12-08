@@ -432,16 +432,23 @@ class split(MovingCameraScene):
 
 
 
-class understandingthelimit(Scene):
+class understandingthelimit(MovingCameraScene):
     def construct(self):
+        self.camera:MovingCamera
+        self.camera.frame.save_state()
         plane = NumberPlane(
-            x_range=[-3, 10],
+            x_range=[-10, 30],
+            y_range=[-10, 10]
         )
+
 
         self.play(
             DrawBorderThenFill(plane),
             plane.animate.add_coordinates()
         )
+
+        self.camera.frame.move_to(plane.c2p(*[5, 0, 0]))
+
         self.wait(.5)
         sinx = plane.plot(lambda x: np.sin(x) / x).set_color(RED)
         line_at_zero = Line(
@@ -473,18 +480,20 @@ class understandingthelimit(Scene):
         dot_sin = Dot().set_color(BLUE_A)
         # dot_sin_label = MathTex(f"{dot_sin.get_x()}")
         # dot_sin_label.add_updater(lambda x : x.move_to(dot_sin))
-        def dont_pass_zero(x:Dot):
-            if x.get_x() < plane.get_origin()[0]:
-                x.move_to(plane.c2p(*[0, 1, 0]))
+        def moveTozero(dot:Dot, alpha):
+            to = interpolate(10, 0.001, alpha)
+
+            dot.move_to(sinx.get_point_from_function(to))
 
 
-        dot_sin.add_updater(lambda x: dont_pass_zero(x))
-        # self.add(dot_sin_label)
         sinx.reverse_points()
         self.play(
-            MoveAlongPath(dot_sin, sinx), 
-            rate_func = rate_functions.rush_into,
-            run_time = 2
+            UpdateFromAlphaFunc(
+                dot_sin,
+                moveTozero,
+                rate_func = rate_functions.rush_into,
+                run_time = 2
+            ) 
         )
         dot_sin.move_to(plane.c2p(*[0, 1, 0]))
         self.play(Write(line_at_zero_label))
@@ -494,12 +503,12 @@ class understandingthelimit(Scene):
 
         def generate_points_un(x):
             return TAU / x
-        u_n:ParametricFunction = plane.plot(lambda x: generate_points_un(x), use_smoothing = False).set_color(BLUE)
+        u_n:ParametricFunction = plane.plot(lambda x: generate_points_un(x), discontinuities = [0], dt = .5, use_smoothing = False).set_color(PINK)
 
         
         un_label = plane.get_graph_label(
             u_n,
-            label = MathTex(r"\frac {\tau} {x}"),
+            label = MathTex(r"u(x) = \frac {\tau} {x}"),
             direction=UR,
             x_val= 5
         )
@@ -507,12 +516,78 @@ class understandingthelimit(Scene):
         self.play(Create(u_n))
         self.play(Write(un_label))
 
-        sin_un = plane.plot(lambda x: np.sin(TAU / x) / x).set_color(GREEN)
+        t_x_dot = Dot().set_color(WHITE).move_to(plane.c2p(*u_n.get_point_from_function(1)))
+        self.add(t_x_dot)
+        def movedown(dot:Dot, alpha):
+            to = interpolate(2, 10, alpha)
+
+            dot.move_to(u_n.get_point_from_function(to))
+
+        lim_of_x = MathTex(
+            r"\lim_{x \to \infty} u(x) = 0",
+            color = YELLOW,
+        ).move_to(plane.c2p(*[9, 3, 0]))
+
+        self.add(t_x_dot)
+        self.play(
+            UpdateFromAlphaFunc(
+                t_x_dot,
+                movedown,
+                run_time = 5,
+                rate_func = rate_functions.rush_from
+            ),
+            Write(lim_of_x)
+        )
+
+        self.play(FadeOut(sinx, line_at_zero, dot_sin))
+
+        sin_un = plane.plot(lambda x: np.sin(TAU / x) / (TAU/ x), discontinuities = [0], dt = .01, use_smoothing = True).set_color(GREEN)
+        si_un_label = plane.get_graph_label(
+            sin_un,
+            label = MathTex(r"\frac {\sin(u(n))} {u(n)}"),
+            direction=DR,
+            x_val=1
+        )
+
+        self.play(Create(sin_un), Write(si_un_label))
+
+        dot_on_sin_ux = Dot().set_color(WHITE).move_to(sin_un.get_point_from_function(1))
+        t_x_dot.move_to(plane.c2p(*u_n.get_point_from_function(1)))
+        self.add(dot_on_sin_ux)
+
+        self.both_dots = VGroup(dot_on_sin_ux, t_x_dot)
+
+        self.wait(1)
+        self.camera.auto_zoom(self.both_dots)
+
+        def continueTOINF(group, alpha):
+            to = interpolate(1, 15, alpha)
+            group[0].move_to(sin_un.get_point_from_function(to))
+            group[1].move_to(u_n.get_point_from_function(to))
+
+        def move_cam_w_points(mob):
+            mob.move_to(self.both_dots)
+
+        self.play(Restore(self.camera.frame))
+
+        self.play(
+            UpdateFromAlphaFunc(
+                self.both_dots,
+                continueTOINF,
+                run_time = 3,
+                rate_func = rate_functions.rush_from
+            ),
+
+        )
 
         self.wait(2)
+        sin_un_lim = MathTex(
+            r"\lim_{u(n) \to 0} \frac {\sin u(n)} {u(n)} = 1"
+        ).move_to(plane.c2p(*[8,-2, 0])).set_color(YELLOW)
 
+        self.play(Write(sin_un_lim))
             
-
+        self.wait()
 
     
         
