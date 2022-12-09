@@ -1,4 +1,81 @@
 from manim import *
+
+
+
+
+
+
+
+class conclusion(Scene):
+    def construct(self):
+        tau_area = MathTex(
+            r"\frac {\tau} {2} r^2",
+            font_size =70,
+            color = RED
+        )
+
+        self.play(Write(tau_area))
+        self.wait(1)
+
+        self.play(
+            Transform(
+                tau_area,
+                MathTex(
+                    r"\frac {\tau r} {2} r",
+                    font_size =70,
+                    color = RED
+                )
+            )
+        )
+        our_c = Text("The circumference!").shift(UP * 2)
+
+        self.play(
+            ShowCreationThenFadeOut(SurroundingRectangle(tau_area[0][0:2], YELLOW, buff = .15)),
+            FadeIn(our_c),
+            run_time = 2.5
+        )
+
+        pi_area = MathTex(
+            r"\pi r^2",
+            font_size =70,
+            color = YELLOW
+        )
+        self.play(
+            FadeOut(tau_area, our_c)
+        )
+        self.play(Write(pi_area))
+        ito_d = Text("In terms of diameter!").shift(UP * 2)
+        arrow_to_pi = Arrow(ito_d, pi_area[0][0])
+
+
+        raidii = Text("but also in terms of radius!").shift(DOWN * 2)
+        arrow_to_r = Arrow(raidii, pi_area[0][1])
+
+        self.wait(1)
+        self.play(
+            FadeIn(ito_d),
+            Create(arrow_to_pi)
+        )
+        self.wait(2)
+        self.play(
+            FadeIn(raidii),
+            Create(arrow_to_r)
+        )
+        self.wait(1)
+
+        gross = Text("Thats disgusting!", color = YELLOW).shift(DOWN * 3)
+        self.play(Write(gross))
+        self.wait()
+
+
+
+
+
+
+
+
+
+
 class credits(Scene):
     def construct(self):
         credit = Text("Credits").to_edge(UL)
@@ -25,10 +102,10 @@ class credits(Scene):
         list[2].set_color(BLUE)
 
         bullets = [
-            ["Ms Blake not caring during CIM", "Peer tutoring club for chips", "Alex DC for constant input"],
+            ["Ms Blake not caring", "Peer tutoring club snacks", "Alex DC for constant input"],
             ["Bel for grapes", "Project extensions", "Test extension"],
             ["David Riccio for lemon squares", "Lyndon Hess for wearing shoes", "Kieran Shulman for cheese-its"],
-            ["Chargers in the library", "Lucine", "Fitness subteam"]
+            ["Chargers in the library", "Lucine", "stack overflow"]
         ]
 
 
