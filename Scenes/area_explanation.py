@@ -328,11 +328,18 @@ class split(MovingCameraScene):
                 # )
                 run_time = 2
             )
-
+            self.camera.frame.save_state()
             self.play(
                 ShowCreationThenFadeOut(SurroundingRectangle(equation_for_total_area_inf[2], color = YELLOW, buff = .05)),
                 run_time = 1
             )
+
+            self.play(
+                self.camera.frame.animate.shift(RIGHT * 5),
+                run_time = 4
+            )
+
+            self.play(Restore(self.camera.frame))
 
             u_of_n = MathTex(
                 "{{u(n)}} = { {{\\tau}} \\over {{n}} } ",
@@ -441,13 +448,12 @@ class understandingthelimit(MovingCameraScene):
             y_range=[-10, 10]
         )
 
+        self.camera.frame.move_to(plane.c2p(*[5, 0, 0]))
 
         self.play(
             DrawBorderThenFill(plane),
             plane.animate.add_coordinates()
         )
-
-        self.camera.frame.move_to(plane.c2p(*[5, 0, 0]))
 
         self.wait(.5)
         sinx = plane.plot(lambda x: np.sin(x) / x).set_color(RED)
