@@ -86,9 +86,11 @@ class credits(Scene):
         shaun.shift(RIGHT * 3, DOWN * .5)
         self.play(Write(credit))
         self.add(shaun)
+        surrshaun = SurroundingRectangle(shaun, buff = .1, color = WHITE)
+        shaunteaches = Text("@shaunteaches", color = YELLOW).move_to(shaun.get_top() + [0, .6, 0])
         self.play(
-            Create(SurroundingRectangle(shaun, buff = .1, color = WHITE)),
-            Write(Text("@shaunteaches", color = YELLOW).move_to(shaun.get_top() + [0, .6, 0]))
+            Create(surrshaun),
+            Write(shaunteaches)
             )
         self.wait(2)
         list = BulletedList(
@@ -105,7 +107,7 @@ class credits(Scene):
             ["Ms Blake not caring", "Peer tutoring club snacks", "Alex DC for constant input"],
             ["Bel for grapes", "Project extensions", "Test extension"],
             ["David Riccio for lemon squares", "Lyndon Hess for wearing shoes", "Kieran Shulman for cheese-its"],
-            ["Chargers in the library", "Lucine", "stack overflow"]
+            ["Chargers in the library", "Lucine", "chiken nuggets"]
         ]
 
 
@@ -130,3 +132,8 @@ class credits(Scene):
                     run_time = 1
                 )
                 self.wait(2)
+        self.play(FadeOut(list))
+        self.play(shaun.animate.move_to(ORIGIN))
+        self.play(FadeOut(shaun, surrshaun, shaunteaches))
+        self.play(Write(Text("Thanks for watching!")))
+        self.wait()
