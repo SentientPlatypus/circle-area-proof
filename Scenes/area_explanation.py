@@ -280,12 +280,12 @@ class split(MovingCameraScene):
                 self.to_focus = all_sects[new_n - 1].set_color(YELLOW)
 
             self.play(
-                # UpdateFromAlphaFunc(
-                #     all_sects,
-                #     make_infinite_sectors,
-                #     run_time = 2.5,
-                #     rate_func = rate_functions.ease_in_expo
-                # ),
+                UpdateFromAlphaFunc(
+                    all_sects,
+                    make_infinite_sectors,
+                    run_time = 2.5,
+                    rate_func = rate_functions.ease_in_expo
+                ),
                 Transform(textGroup[2], infty),
                 ShowCreationThenFadeOut(SurroundingRectangle(textGroup[2], color = YELLOW, buff=.25))
             )
@@ -320,12 +320,12 @@ class split(MovingCameraScene):
             self.play(
                 ShowCreationThenFadeOut(SurroundingRectangle(equation_for_total_area_inf[3:], color = YELLOW, buff=.05)),
 
-                # UpdateFromAlphaFunc(
-                #     all_sects,
-                #     make_infinite_sectors,
-                #     run_time = 9,
-                #     rate_func = rate_functions.ease_in_expo
-                # )
+                UpdateFromAlphaFunc(
+                    all_sects,
+                    make_infinite_sectors,
+                    run_time = 9,
+                    rate_func = rate_functions.ease_in_expo
+                ),
                 run_time = 2
             )
             self.camera.frame.save_state()
@@ -335,7 +335,7 @@ class split(MovingCameraScene):
             )
 
             self.play(
-                self.camera.frame.animate.shift(RIGHT * 5),
+                self.camera.frame.animate.shift(RIGHT * 7),
                 run_time = 4
             )
 
@@ -394,6 +394,8 @@ class split(MovingCameraScene):
                     ).move_to(new_limits_ITO_u).set_color(WHITE)
                 ),
             )
+
+            self.wait(2)
 
             self.play(
                 Transform(
@@ -514,7 +516,7 @@ class understandingthelimit(MovingCameraScene):
         
         un_label = plane.get_graph_label(
             u_n,
-            label = MathTex(r"u(x) = \frac {\tau} {x}"),
+            label = MathTex(r"u(n) = \frac {\tau} {n}"),
             direction=UR,
             x_val= 5
         )
@@ -530,7 +532,7 @@ class understandingthelimit(MovingCameraScene):
             dot.move_to(u_n.get_point_from_function(to))
 
         lim_of_x = MathTex(
-            r"\lim_{x \to \infty} u(x) = 0",
+            r"\lim_{n \to \infty} u(n) = 0",
             color = YELLOW,
         ).move_to(plane.c2p(*[9, 3, 0]))
 
@@ -586,7 +588,6 @@ class understandingthelimit(MovingCameraScene):
 
         )
 
-        self.wait(2)
         sin_un_lim = MathTex(
             r"\lim_{u(n) \to 0} \frac {\sin u(n)} {u(n)} = 1"
         ).move_to(plane.c2p(*[8,-2, 0])).set_color(YELLOW)

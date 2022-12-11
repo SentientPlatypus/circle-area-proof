@@ -27,8 +27,18 @@ class intro_slide(Scene):
         self.wait(3)
 
 
-        
+class pid(Scene):
+    def construct(self):
+        self.circ = Circle(
+            radius = 3.5,
+            fill_opacity = 0,
+            color = WHITE
+        )
+        pid = MathTex(r"\pi d")
 
+        self.play(Create(self.circ))
+        self.play(Write(pid))
+        self.wait()
 
 
 class create_initial_circle(Scene):
@@ -255,4 +265,31 @@ class SineCurveUnitCircle(MovingCameraScene):
         self.wait(8.5)
 
         dot.remove_updater(go_around_circle)
+
+class exampleSine(Scene):
+    def construct(self):
+        sinfunc = MathTex(
+            r"f(x) = \sin\left(",
+            r"\frac {\tau} {4}",
+            r"x \right)",
+            color = WHITE
+        )
+        sinfunc[1].set_color(RED)
+        self.play(Write(sinfunc))
+        self.wait(1)
+        self.play(
+            ShowCreationThenFadeOut(SurroundingRectangle(sinfunc[1][0]))
+        )
+        self.play(ShowCreationThenFadeOut(SurroundingRectangle(sinfunc[1][2])))
+        
+        self.play(
+            Transform(
+                sinfunc[1],
+                MathTex(
+                    r"\frac {\pi} {2}",
+                    color = YELLOW
+                ).move_to(sinfunc[1])
+            )
+        )
+        self.wait()
 

@@ -44,11 +44,11 @@ class conclusion(Scene):
             FadeOut(tau_area, our_c)
         )
         self.play(Write(pi_area))
-        ito_d = Text("In terms of diameter!").shift(UP * 2)
+        ito_d = Text("In proportion to diameter!").shift(UP * 2)
         arrow_to_pi = Arrow(ito_d, pi_area[0][0])
 
 
-        raidii = Text("but also in terms of radius!").shift(DOWN * 2)
+        raidii = Text("but also multiplies by radius!").shift(DOWN * 2)
         arrow_to_r = Arrow(raidii, pi_area[0][1])
 
         self.wait(1)
@@ -61,10 +61,10 @@ class conclusion(Scene):
             FadeIn(raidii),
             Create(arrow_to_r)
         )
-        self.wait(1)
+        self.wait(2)
 
         gross = Text("Thats disgusting!", color = YELLOW).shift(DOWN * 3)
-        self.play(Write(gross))
+        self.play(FadeIn(gross))
         self.wait()
 
 
