@@ -2,4 +2,4 @@
  Manim code for proving the area of a circle with tau instead of pi. For Shaun Errichiello
 
 
-watch it here: (HERE)[https://youtu.be/Okraa2ZElrE]
+watch it here: https://youtu.be/Okraa2ZElrE
