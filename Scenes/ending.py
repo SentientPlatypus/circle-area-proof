@@ -87,7 +87,9 @@ class credits(Scene):
         self.play(Write(credit))
         self.add(shaun)
         surrshaun = SurroundingRectangle(shaun, buff = .1, color = WHITE)
+        surrshaun.add_updater(lambda x: x.become(SurroundingRectangle(shaun, buff = .1, color = WHITE)))
         shaunteaches = Text("@shaunteaches", color = YELLOW).move_to(shaun.get_top() + [0, .6, 0])
+        shaunteaches.add_updater(lambda x: x.move_to(shaun.get_top() + [0, .6, 0]))
         self.play(
             Create(surrshaun),
             Write(shaunteaches)
@@ -106,7 +108,7 @@ class credits(Scene):
         bullets = [
             ["Ms Blake not caring", "Peer tutoring club snacks", "Alex DC for constant input"],
             ["Bel for grapes", "Project extensions", "Test extension"],
-            ["David Riccio for lemon squares", "Lyndon Hess for wearing shoes", "Kieran Shulman for cheese-its"],
+            ["David Riccio for lemon squares", "Lyndon Hess for wearing shoes", "Kieran Shulman for cheez-its"],
             ["Chargers in the library", "Lucine", "chiken nuggets"]
         ]
 
@@ -134,6 +136,6 @@ class credits(Scene):
                 self.wait(2)
         self.play(FadeOut(list))
         self.play(shaun.animate.move_to(ORIGIN))
-        self.play(FadeOut(shaun, surrshaun, shaunteaches))
+        self.play(FadeOut(shaun, surrshaun, shaunteaches, credit))
         self.play(Write(Text("Thanks for watching!")))
         self.wait()
