@@ -109,7 +109,8 @@ If you wish to recycle some of my animations, they are all found in the `Scenes`
 
 You first need to install manim
 * pip
-  ```pip install manim
+  ```sh
+  pip install manim
   ```
 
 Additionally, you may need to install tex
