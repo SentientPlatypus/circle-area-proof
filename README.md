@@ -29,7 +29,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Sentientplatypus/circle-area-proof">
-    <img src="logo.png" alt="Logo">
+    <img src="thumbnail.png" alt="Logo">
   </a>
 
 <h3 align="center">A Vindication of the area of a circle with Tau</h3>
@@ -203,7 +203,7 @@ Project Link: [https://github.com/Sentientplatypus/circle-area-proof](https://gi
 [license-url]: https://github.com/Sentientplatypus/circle-area-proof/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: thumbnail.png
+[product-screenshot]: image-2.png
 [python]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
 [python-url]: https://python.com
 
